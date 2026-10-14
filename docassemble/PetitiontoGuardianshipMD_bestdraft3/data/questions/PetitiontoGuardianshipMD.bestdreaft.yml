@@ -1,0 +1,2146 @@
+---
+include:
+  - docassemble.AssemblyLine:assembly_line.yml
+  - docassemble.ALAnyState:any_state.yml
+  - docassemble.ALToolbox:al_income.yml
+---
+metadata:
+  title: >-
+    Labeled labeled ccgn001-with-fields-with-fields
+  short title: >-
+    Labeled labeled ccgn001-w
+  description: |-
+    This form is used to ask for guardianship of a minor in Maryland. It lets you request the right to make decisions for a minor child.
+  can_I_use_this_form: |
+    You can use this form if you are seeking guardianship of a minor child. If the minor is not a child, a different form is needed. Make sure to fill out separate petitions for each minor unless they are siblings.
+  before_you_start: |
+    ### Before you start
+    - Gather all needed information about the minor and your connection to them.
+    - Have any required documents, like birth certificates, ready to include.
+
+    ### When you are done
+    - Check your petition for accuracy and completeness.
+    - Send the petition to the right court along with any required fees.
+  when_you_are_finished: |
+    Once you have sent your petition, you will need to wait for the court to set a hearing date. Make sure to tell all involved people about the petition and the hearing date.
+  efiling_enabled: False
+  integrated_efiling: False
+  integrated_email_filing: False
+  requires_notarization: False
+  unlisted: False
+  landing_page_url: >-
+    https://courtformsonline.org/
+  maturity: production
+  estimated_completion_minutes: ""
+  estimated_completion_delta: ""
+  LIST_topics:
+    - "CO-00-00-00-00"
+  tags:
+    - "CO-00-00-00-00"
+  authors:
+    - Court Forms Online
+  original_form: []
+  original_form_published_on: ""
+  allowed_courts: []
+  typical_role: "plaintiff"
+  al_weaver_version: "2.4.0"
+  generated_on: "2026-10-14"
+  languages:
+    - en
+  jurisdiction: "NAM-US-US+MD"
+  review_date: 2026-10-14
+  form_titles:
+    - Labeled labeled ccgn001-with-fields-with-fields
+  form_numbers: []
+  update_notes: ""
+---
+code: |
+  # This controls the default country and list of states in address field questions
+  AL_DEFAULT_COUNTRY = "US"
+---
+code: |
+  # This controls the default state in address field questions
+  AL_DEFAULT_STATE = "MD"
+---
+code: |
+  github_repo_name = 'docassemble-LabeledLabeledCcgn001Withfieldswithfields'
+  github_user = 'SuffolkLITLab'
+---
+template: interview_short_title
+content: |
+  Start your guardianship petition today
+---
+code: |
+  al_form_type = "starts_case"
+---
+id: alweaver assemblyline settings
+initial: True
+code: |
+  # These exact-name variables drive the reusable next-steps DOCX shell and
+  # are editable in Weaver's AssemblyLine settings panel.
+  al_next_steps_enabled = True
+  al_next_steps_intro_prompt = 'Start your guardianship petition today'
+  al_next_steps_title = 'Labeled labeled ccgn001-with-fields-with-fields'
+  al_next_steps_document_title = 'Petition'
+  al_next_steps_document_purpose = 'Application'
+  al_next_steps_help_organization = 'Maryland Legal Aid'
+  al_next_steps_help_url = 'https://www.mdlab.org'
+  al_next_steps_generate_qr_code = False
+  al_next_steps_what_happens_next = 'Once you have sent your petition, you will need to wait for the court to set a hearing date. Make sure to tell all involved people about the petition and the hearing date.'
+  al_next_steps_what_can_decision_maker_do = "The court can approve your request for guardianship, deny it, or ask for more information. They may also choose a guardian ad litem to represent the minor's interests."
+  al_next_steps_what_happens_if_i_win = 'If your petition is approved, you will get legal guardianship of the minor. This lets you make decisions about their welfare, education, and medical care.'
+---
+objects:
+  # FIX: trial_court_address must be an address object, not a plain string.
+  # AssemblyLine's `trial_court` block needs `trial_court_address.address`.
+  - trial_court_address: ALAddress
+  - attorneys: ALPeopleList.using(ask_number=True,target_number=1)
+  - children: ALPeopleList.using(there_are_any=True)
+  - contacts: ALPeopleList.using(ask_number=True,target_number=1)
+  - control_person: ALPeopleList.using(ask_number=True,target_number=1)
+  - eligible_guardian: ALPeopleList.using(ask_number=True,target_number=1)
+  - government_agency: ALPeopleList.using(ask_number=True,target_number=1)
+  - guardians: ALPeopleList.using(ask_number=True,target_number=1)
+  - heirs: ALPeopleList.using(ask_number=True,target_number=1)
+  - interested_person: ALPeopleList.using(ask_number=True,target_number=1)
+  - minor_attorney: ALPeopleList.using(ask_number=True,target_number=1)
+  - parents: ALPeopleList.using(there_are_any=True)
+  - power_of_attorney: ALPeopleList.using(ask_number=True,target_number=1)
+  - prospective_guardian_person: ALPeopleList.using(ask_number=True,target_number=1)
+  - responsible_person: ALPeopleList.using(ask_number=True,target_number=1)
+  - siblings: ALPeopleList.using(there_are_any=True)
+  - users: ALPeopleList.using(ask_number=True,target_number=1)
+  - residences: DAList.using(object_type=DAObject,complete_attribute='complete')
+  - properties: ALAssetList.using(ask_number=True,complete_attribute='complete')
+---
+sections:
+  - about_you: Your Information
+  - case_details: Case Details
+  - people: People Involved
+  - sign_and_submit: Review & Submit
+  - review_labeled_labeled_ccgn001withfieldswithfields: Review your answers
+---
+#################### Interview order #####################
+comment: |
+  Controls order and branching logic for questions specific to this form
+id: interview_order_labeled_labeled_ccgn001withfieldswithfields
+mandatory: True
+code: |
+  al_intro_screen
+  labeled_labeled_ccgn001withfieldswithfields_intro
+
+  user_role = "plaintiff"
+  user_ask_role = "plaintiff"
+
+  # 1. Petitioner & Court Information
+  nav.set_section("about_you")
+  users.gather()
+  set_parts(subtitle=str(users))
+
+  nav.set_section("case_details")
+  trial_court_circuit_yes
+  trial_court_orphans_yes
+  trial_court
+  docket_number
+  docket_number_2
+
+  # 2. Guardianship Type & Reason
+  guardianship_person_yes
+  guardianship_property_yes
+  guardianship_person_property_yes
+  guardianship_reason
+
+  # 3. Children / Minors
+  nav.set_section("people")
+  children.gather()
+  children_current_location
+  children_va_beneficiary
+
+  # 4. Petitioner & Prospective Guardian Background
+  users1_conviction
+  if users1_conviction:
+    users1_conviction_name
+    users1_conviction_year
+    users1_conviction_court
+    users1_good_cause
+
+  prospective_guardian_person.gather()
+  if prospective_guardian_person.number() > 0:
+    prospective_guardian_person_rel
+    prospective_guardian_person_conviction
+    if prospective_guardian_person_conviction:
+      prospective_guardian_person_conviction_name
+      prospective_guardian_person_conviction_year
+      prospective_guardian_person_conviction_court
+      prospective_guardian_person_good_cause
+
+  # Prospective guardian of the minor's property (only if property guardianship is requested)
+  if guardianship_property_yes or guardianship_person_property_yes:
+    prospective_guardian_property_name
+    prospective_guardian_property_age
+    prospective_guardian_property_rel
+    prospective_guardian_property_conviction
+    if prospective_guardian_property_conviction:
+      prospective_guardian_property_conviction_name
+      prospective_guardian_property_conviction_year
+      prospective_guardian_property_conviction_court
+      prospective_guardian_property_good_cause
+
+  # 5. Interested Parties & Lists
+  parents.gather()
+  siblings.gather()
+  guardians.gather()
+  power_of_attorney.gather()
+  minor_attorney.gather()
+  responsible_person.gather()
+  government_agency.gather()
+  interested_person.gather()
+  control_person.gather()
+  eligible_guardian.gather()
+
+  # 6. Residences & Property Details
+  residences.gather()
+  properties.gather()
+  users1_interest_in_property
+
+  # 7. Proceedings & Signatures
+  proceedings_minor1
+  proceedings_petitioner1
+
+  nav.set_section("sign_and_submit")
+  signature_date
+  users1_signed_date
+  attorney_signed_date
+
+  labeled_labeled_ccgn001withfieldswithfields_preview_question
+  basic_questions_signature_flow
+
+  store_variables_snapshot(
+      persistent=True,
+      data={
+          "zip": showifdef("users[0].address.zip"),
+          "reached_interview_end": True,
+      },
+  )
+  set_progress(100)
+  labeled_labeled_ccgn001withfieldswithfields_download
+---
+id: Labeled labeled ccgn001 with fields with fields intro
+continue button field: labeled_labeled_ccgn001withfieldswithfields_intro
+question: |
+  Labeled labeled ccgn001-with-fields-with-fields
+subquestion: |
+  ### Before you start
+  - Gather all needed information about the minor and your connection to them.
+  - Have any required documents, like birth certificates, ready to include.
+
+  ### When you are done
+  - Check your petition for accuracy and completeness.
+  - Send the petition to the right court along with any required fees.
+
+  You can use this form if you are seeking guardianship of a minor child. If the minor is not a child, a different form is needed. Make sure to fill out separate petitions for each minor unless they are siblings.
+---
+id: Trial Court Information
+question: |
+  Trial Court Information
+fields:
+  - "Trial court circuit": trial_court_circuit_yes
+    datatype: yesno
+  - "Trial court orphans": trial_court_orphans_yes
+    datatype: yesno
+---
+# FIX: collects the court name and an address OBJECT. This satisfies the
+# `need:` list in AssemblyLine's `trial_court` block
+# (trial_court_name and trial_court_address.address).
+id: trial court name and address
+question: |
+  Which court are you filing in?
+fields:
+  - "Court name": trial_court_name
+  - code: |
+      trial_court_address.address_fields(
+          country_code=AL_DEFAULT_COUNTRY, default_state=AL_DEFAULT_STATE
+      )
+  - "County": trial_court_address.county
+---
+id: trial court phone number
+question: |
+  What is the court's phone number?
+fields:
+  - "Phone number": trial_court.phone_number
+    required: False
+---
+id: docket number
+question: |
+  Docket number
+fields:
+  - "Docket number": docket_number
+  - "Docket number 2": docket_number_2
+    required: False
+---
+id: signature date
+question: |
+  Date of signing
+fields:
+  - "Signature date": signature_date
+    datatype: date
+    default: ${ today() }
+---
+id: Guardianship Type
+question: |
+  Guardianship Type
+fields:
+  - "Guardianship of person": guardianship_person_yes
+    datatype: yesno
+  - "Guardianship of property": guardianship_property_yes
+    datatype: yesno
+  - "Guardianship of person and property": guardianship_person_property_yes
+    datatype: yesno
+---
+id: Minor Information
+question: |
+  Minor Information
+fields:
+  - "First parent of child one": children1_parent1_name
+  - "Second parent of child one": children1_parent2_name
+  - "Home address of child one": children1_residence_address
+  - "Current location of children": children_current_location
+---
+id: Petitioner Relationship
+question: |2
+  Petitioner Relationship to Minor(s)
+fields:
+  - "Relationship of petitioner": petitioner_rel
+  - "Children VA beneficiary status": children_va_beneficiary
+    datatype: noyesradio
+---
+id: Petitioner conviction status
+question: |
+  Have you ever been convicted of a crime?
+fields:
+  - no label: users1_conviction
+    datatype: yesnoradio
+---
+id: Petitioner conviction details
+question: |
+  Tell us about your conviction
+fields:
+  - "Conviction name": users1_conviction_name
+  - "Conviction year": users1_conviction_year
+  - "Conviction court": users1_conviction_court
+  - "Why you should still be appointed (good cause)": users1_good_cause
+---
+id: Prospective Guardian of Person
+question: |
+  Prospective Guardian of Person
+fields:
+  - Relationship of prospective guardian to minor(s): prospective_guardian_person_rel
+  - "Has the prospective guardian ever been convicted of a crime?": prospective_guardian_person_conviction
+    datatype: yesnoradio
+---
+id: Prospective guardian of person conviction details
+question: |
+  Prospective guardian's conviction
+fields:
+  - "Conviction name": prospective_guardian_person_conviction_name
+  - "Conviction year": prospective_guardian_person_conviction_year
+  - "Conviction court": prospective_guardian_person_conviction_court
+  - "Why they should still be appointed (good cause)": prospective_guardian_person_good_cause
+---
+id: Prospective Guardian of Property
+question: |
+  Prospective Guardian of Property
+fields:
+  - "Prospective guardian property name": prospective_guardian_property_name
+  - "Prospective guardian property age": prospective_guardian_property_age
+    datatype: integer
+    min: 0
+  - "Relationship of property guardian": prospective_guardian_property_rel
+  - "Has the property guardian ever been convicted of a crime?": prospective_guardian_property_conviction
+    datatype: yesnoradio
+---
+id: Prospective guardian of property conviction details
+question: |
+  Property guardian's conviction
+fields:
+  - "Conviction name": prospective_guardian_property_conviction_name
+  - "Conviction year": prospective_guardian_property_conviction_year
+  - "Conviction court": prospective_guardian_property_conviction_court
+  - "Why they should still be appointed (good cause)": prospective_guardian_property_good_cause
+---
+id: Interested people
+question: |
+  Interested people
+fields:
+  - label: Address of guardian
+    field: guardian_address
+    required: False
+  - label: Address of power of attorney
+    field: power_of_attorney_address
+    required: False
+  - label: "Address of minor's attorney"
+    field: minor_attorney_address
+    required: False
+  - label: Address of responsible person
+    field: responsible_person_address
+    required: False
+  - label: Address of government agency
+    field: government_agency_address
+    required: False
+  - label: Address of interested person
+    field: interested_person_address
+    required: False
+  - label: Address of control person
+    field: control_person_address
+    required: False
+  - label: Address of allowed guardian
+    field: eligible_guardian_address
+    required: False
+subquestion: |2-
+  The following is a list of the addresses if known, of
+  all interested persons
+---
+id: Reason for Guardianship
+question: |2
+  Reason for Seeking Guardianship
+fields:
+  - "Reason for guardianship": guardianship_reason
+---
+id: Proceedings Information
+question: |
+  Proceedings Information
+fields:
+  - "Proceedings about minor one": proceedings_minor1
+  - "Proceedings about the person asking": proceedings_petitioner1
+subquestion: |2-
+  All other proceedings regarding the minor(s) (including any proceedings in juvenile court) and regarding the petitioner, are
+  as follows:
+---
+id: Attorney Information
+question: |
+  Attorney Information
+fields:
+  - "Date attorney signed": attorney_signed_date
+    datatype: date
+  - "Attorney number": attorney_number
+  - "Attorney fax number": attorney_fax
+  - "Attorney address city and zip": attorney_address_city_zip
+---
+id: Petitioner Information
+question: |
+  Petitioner Information
+fields:
+  - "User1 address city and zip": users1_address_city_zip
+  - "User1 fax number": users1_fax
+  - "Date user1 signed": users1_signed_date
+    datatype: date
+---
+id: User1 interest in property
+question: |2
+  Petitioner interest in property
+fields:
+  - "User1 interest in property": users1_interest_in_property
+subquestion: "Type \"NA\" (Not Applicable), if this does not apply to petitioner"
+---
+comment: |
+  The questions below are copies of the questions in AssemblyLine's
+  ql_baseline.yml, rewritten to name this interview's own objects instead of the
+  generic `x`. Edit them freely: they replace the AssemblyLine versions. Delete
+  one to go back to the AssemblyLine wording.
+---
+id: attorneys names
+sets:
+  - attorneys[i].name.first
+  - attorneys[i].name.last
+  - attorneys[i].name.middle
+  - attorneys[i].name.suffix
+question: |
+  % if hasattr(attorneys, 'ask_number') and attorneys.ask_number and attorneys.target_number == 1:
+  Name of attorney
+  % else:
+  Name of the ${ ordinal(i) } attorney
+  % endif
+fields:
+  - code: |
+      attorneys[i].name_fields()
+---
+id: attorney address
+sets:
+  - attorneys[i].address.address
+  - attorneys[i].address.city
+  - attorneys[i].address.state
+  - attorneys[i].address.zip
+  - attorneys[i].address.unit
+  - attorneys[i].address.country
+question: |
+  What is ${ attorneys[i].possessive('address') }?
+fields:
+  - code: |
+      attorneys[i].address_fields(
+          country_code=AL_DEFAULT_COUNTRY, default_state=AL_DEFAULT_STATE
+      )
+---
+id: attorney phone number
+question: |
+  What is ${ attorneys[i] }'s phone number?
+fields:
+  - Phone: attorneys[i].phone_number
+    datatype: al_international_phone
+---
+id: attorney email
+question: |
+  What is ${ attorneys[i] }'s email address?
+fields:
+  - Email: attorneys[i].email
+    datatype: email
+---
+id: children names
+sets:
+  - children[i].name.first
+  - children[i].name.last
+  - children[i].name.middle
+  - children[i].name.suffix
+question: |
+  % if hasattr(children, 'ask_number') and children.ask_number and children.target_number == 1:
+  Name of child
+  % else:
+  Name of the ${ ordinal(i) } child
+  % endif
+fields:
+  - code: |
+      children[i].name_fields()
+---
+id: another child
+question: |
+  Is there another child to tell us about?
+fields:
+  - no label: children.there_is_another
+    datatype: yesnoradio
+---
+id: child gender
+sets:
+  - children[i].gender
+question: |
+  What is ${ children[i].possessive('gender') }?
+fields:
+  - code: |
+      children[i].gender_fields(show_help=True)
+---
+id: contacts names
+sets:
+  - contacts[i].name.first
+  - contacts[i].name.last
+  - contacts[i].name.middle
+  - contacts[i].name.suffix
+question: |
+  % if hasattr(contacts, 'ask_number') and contacts.ask_number and contacts.target_number == 1:
+  Name of contact
+  % else:
+  Name of the ${ ordinal(i) } contact
+  % endif
+fields:
+  - code: |
+      contacts[i].name_fields()
+---
+id: contact address
+sets:
+  - contacts[i].address.address
+  - contacts[i].address.city
+  - contacts[i].address.state
+  - contacts[i].address.zip
+  - contacts[i].address.unit
+  - contacts[i].address.country
+question: |
+  What is ${ contacts[i].possessive('address') }?
+fields:
+  - code: |
+      contacts[i].address_fields(
+          country_code=AL_DEFAULT_COUNTRY, default_state=AL_DEFAULT_STATE
+      )
+---
+id: control person names
+sets:
+  - control_person[i].name.first
+  - control_person[i].name.last
+  - control_person[i].name.middle
+  - control_person[i].name.suffix
+question: |
+  % if hasattr(control_person, 'ask_number') and control_person.ask_number and control_person.target_number == 1:
+  Name of control person
+  % else:
+  Name of the ${ ordinal(i) } control person
+  % endif
+fields:
+  - code: |
+      control_person[i].name_fields()
+---
+id: control person phone number
+question: |
+  What is ${ control_person[i] }'s phone number?
+fields:
+  - Phone: control_person[i].phone_number
+    datatype: al_international_phone
+---
+id: control person email
+question: |
+  What is ${ control_person[i] }'s email address?
+fields:
+  - Email: control_person[i].email
+    datatype: email
+---
+id: eligible guardian names
+sets:
+  - eligible_guardian[i].name.first
+  - eligible_guardian[i].name.last
+  - eligible_guardian[i].name.middle
+  - eligible_guardian[i].name.suffix
+question: |
+  % if hasattr(eligible_guardian, 'ask_number') and eligible_guardian.ask_number and eligible_guardian.target_number == 1:
+  Name of eligible guardian
+  % else:
+  Name of the ${ ordinal(i) } eligible guardian
+  % endif
+fields:
+  - code: |
+      eligible_guardian[i].name_fields()
+---
+id: eligible guardian phone number
+question: |
+  What is ${ eligible_guardian[i] }'s phone number?
+fields:
+  - Phone: eligible_guardian[i].phone_number
+    datatype: al_international_phone
+---
+id: eligible guardian email
+question: |
+  What is ${ eligible_guardian[i] }'s email address?
+fields:
+  - Email: eligible_guardian[i].email
+    datatype: email
+---
+id: government agency names
+sets:
+  - government_agency[i].name.first
+  - government_agency[i].name.last
+  - government_agency[i].name.middle
+  - government_agency[i].name.suffix
+question: |
+  % if hasattr(government_agency, 'ask_number') and government_agency.ask_number and government_agency.target_number == 1:
+  Name of government agency
+  % else:
+  Name of the ${ ordinal(i) } government agency
+  % endif
+fields:
+  - code: |
+      government_agency[i].name_fields()
+---
+id: government agency phone number
+question: |
+  What is ${ government_agency[i] }'s phone number?
+fields:
+  - Phone: government_agency[i].phone_number
+    datatype: al_international_phone
+---
+id: government agency email
+question: |
+  What is ${ government_agency[i] }'s email address?
+fields:
+  - Email: government_agency[i].email
+    datatype: email
+---
+id: guardians names
+sets:
+  - guardians[i].name.first
+  - guardians[i].name.last
+  - guardians[i].name.middle
+  - guardians[i].name.suffix
+question: |
+  % if hasattr(guardians, 'ask_number') and guardians.ask_number and guardians.target_number == 1:
+  Name of guardian
+  % else:
+  Name of the ${ ordinal(i) } guardian
+  % endif
+fields:
+  - code: |
+      guardians[i].name_fields()
+---
+id: guardian phone number
+question: |
+  What is ${ guardians[i] }'s phone number?
+fields:
+  - Phone: guardians[i].phone_number
+    datatype: al_international_phone
+---
+id: guardian email
+question: |
+  What is ${ guardians[i] }'s email address?
+fields:
+  - Email: guardians[i].email
+    datatype: email
+---
+id: heirs names
+sets:
+  - heirs[i].name.first
+  - heirs[i].name.last
+  - heirs[i].name.middle
+  - heirs[i].name.suffix
+question: |
+  % if hasattr(heirs, 'ask_number') and heirs.ask_number and heirs.target_number == 1:
+  Name of heir
+  % else:
+  Name of the ${ ordinal(i) } heir
+  % endif
+fields:
+  - code: |
+      heirs[i].name_fields()
+---
+id: heir address
+sets:
+  - heirs[i].address.address
+  - heirs[i].address.city
+  - heirs[i].address.state
+  - heirs[i].address.zip
+  - heirs[i].address.unit
+  - heirs[i].address.country
+question: |
+  What is ${ heirs[i].possessive('address') }?
+fields:
+  - code: |
+      heirs[i].address_fields(
+          country_code=AL_DEFAULT_COUNTRY, default_state=AL_DEFAULT_STATE
+      )
+---
+id: heir phone number
+question: |
+  What is ${ heirs[i] }'s phone number?
+fields:
+  - Phone: heirs[i].phone_number
+    datatype: al_international_phone
+---
+id: heir email
+question: |
+  What is ${ heirs[i] }'s email address?
+fields:
+  - Email: heirs[i].email
+    datatype: email
+---
+id: interested person names
+sets:
+  - interested_person[i].name.first
+  - interested_person[i].name.last
+  - interested_person[i].name.middle
+  - interested_person[i].name.suffix
+question: |
+  % if hasattr(interested_person, 'ask_number') and interested_person.ask_number and interested_person.target_number == 1:
+  Name of interested person
+  % else:
+  Name of the ${ ordinal(i) } interested person
+  % endif
+fields:
+  - code: |
+      interested_person[i].name_fields()
+---
+id: interested person phone number
+question: |
+  What is ${ interested_person[i] }'s phone number?
+fields:
+  - Phone: interested_person[i].phone_number
+    datatype: al_international_phone
+---
+id: interested person email
+question: |
+  What is ${ interested_person[i] }'s email address?
+fields:
+  - Email: interested_person[i].email
+    datatype: email
+---
+id: minor attorney names
+sets:
+  - minor_attorney[i].name.first
+  - minor_attorney[i].name.last
+  - minor_attorney[i].name.middle
+  - minor_attorney[i].name.suffix
+question: |
+  % if hasattr(minor_attorney, 'ask_number') and minor_attorney.ask_number and minor_attorney.target_number == 1:
+  Name of minor attorney
+  % else:
+  Name of the ${ ordinal(i) } minor attorney
+  % endif
+fields:
+  - code: |
+      minor_attorney[i].name_fields()
+---
+id: minor attorney phone number
+question: |
+  What is ${ minor_attorney[i] }'s phone number?
+fields:
+  - Phone: minor_attorney[i].phone_number
+    datatype: al_international_phone
+---
+id: minor attorney email
+question: |
+  What is ${ minor_attorney[i] }'s email address?
+fields:
+  - Email: minor_attorney[i].email
+    datatype: email
+---
+id: parents names
+sets:
+  - parents[i].name.first
+  - parents[i].name.last
+  - parents[i].name.middle
+  - parents[i].name.suffix
+question: |
+  % if hasattr(parents, 'ask_number') and parents.ask_number and parents.target_number == 1:
+  Name of parent
+  % else:
+  Name of the ${ ordinal(i) } parent
+  % endif
+fields:
+  - code: |
+      parents[i].name_fields()
+---
+id: another parent
+question: |
+  Is there another parent to tell us about?
+fields:
+  - no label: parents.there_is_another
+    datatype: yesnoradio
+---
+id: parent address
+sets:
+  - parents[i].address.address
+  - parents[i].address.city
+  - parents[i].address.state
+  - parents[i].address.zip
+  - parents[i].address.unit
+  - parents[i].address.country
+question: |
+  What is ${ parents[i].possessive('address') }?
+fields:
+  - code: |
+      parents[i].address_fields(
+          country_code=AL_DEFAULT_COUNTRY, default_state=AL_DEFAULT_STATE
+      )
+---
+id: parent phone number
+question: |
+  What is ${ parents[i] }'s phone number?
+fields:
+  - Phone: parents[i].phone_number
+    datatype: al_international_phone
+---
+id: parent email
+question: |
+  What is ${ parents[i] }'s email address?
+fields:
+  - Email: parents[i].email
+    datatype: email
+---
+id: power of attorney names
+sets:
+  - power_of_attorney[i].name.first
+  - power_of_attorney[i].name.last
+  - power_of_attorney[i].name.middle
+  - power_of_attorney[i].name.suffix
+question: |
+  % if hasattr(power_of_attorney, 'ask_number') and power_of_attorney.ask_number and power_of_attorney.target_number == 1:
+  Name of power of attorney
+  % else:
+  Name of the ${ ordinal(i) } power of attorney
+  % endif
+fields:
+  - code: |
+      power_of_attorney[i].name_fields()
+---
+id: power of attorney phone number
+question: |
+  What is ${ power_of_attorney[i] }'s phone number?
+fields:
+  - Phone: power_of_attorney[i].phone_number
+    datatype: al_international_phone
+---
+id: power of attorney email
+question: |
+  What is ${ power_of_attorney[i] }'s email address?
+fields:
+  - Email: power_of_attorney[i].email
+    datatype: email
+---
+id: prospective guardian person names
+sets:
+  - prospective_guardian_person[i].name.first
+  - prospective_guardian_person[i].name.last
+  - prospective_guardian_person[i].name.middle
+  - prospective_guardian_person[i].name.suffix
+question: |
+  % if hasattr(prospective_guardian_person, 'ask_number') and prospective_guardian_person.ask_number and prospective_guardian_person.target_number == 1:
+  Name of prospective guardian person
+  % else:
+  Name of the ${ ordinal(i) } prospective guardian person
+  % endif
+fields:
+  - code: |
+      prospective_guardian_person[i].name_fields()
+---
+id: responsible person names
+sets:
+  - responsible_person[i].name.first
+  - responsible_person[i].name.last
+  - responsible_person[i].name.middle
+  - responsible_person[i].name.suffix
+question: |
+  % if hasattr(responsible_person, 'ask_number') and responsible_person.ask_number and responsible_person.target_number == 1:
+  Name of responsible person
+  % else:
+  Name of the ${ ordinal(i) } responsible person
+  % endif
+fields:
+  - code: |
+      responsible_person[i].name_fields()
+---
+id: responsible person phone number
+question: |
+  What is ${ responsible_person[i] }'s phone number?
+fields:
+  - Phone: responsible_person[i].phone_number
+    datatype: al_international_phone
+---
+id: responsible person email
+question: |
+  What is ${ responsible_person[i] }'s email address?
+fields:
+  - Email: responsible_person[i].email
+    datatype: email
+---
+id: siblings names
+sets:
+  - siblings[i].name.first
+  - siblings[i].name.last
+  - siblings[i].name.middle
+  - siblings[i].name.suffix
+question: |
+  % if hasattr(siblings, 'ask_number') and siblings.ask_number and siblings.target_number == 1:
+  Name of sibling
+  % else:
+  Name of the ${ ordinal(i) } sibling
+  % endif
+fields:
+  - code: |
+      siblings[i].name_fields()
+---
+id: another sibling
+question: |
+  Is there another sibling to tell us about?
+fields:
+  - no label: siblings.there_is_another
+    datatype: yesnoradio
+---
+id: sibling address
+sets:
+  - siblings[i].address.address
+  - siblings[i].address.city
+  - siblings[i].address.state
+  - siblings[i].address.zip
+  - siblings[i].address.unit
+  - siblings[i].address.country
+question: |
+  What is ${ siblings[i].possessive('address') }?
+fields:
+  - code: |
+      siblings[i].address_fields(
+          country_code=AL_DEFAULT_COUNTRY, default_state=AL_DEFAULT_STATE
+      )
+---
+id: sibling phone number
+question: |
+  What is ${ siblings[i] }'s phone number?
+fields:
+  - Phone: siblings[i].phone_number
+    datatype: al_international_phone
+---
+id: sibling email
+question: |
+  What is ${ siblings[i] }'s email address?
+fields:
+  - Email: siblings[i].email
+    datatype: email
+---
+id: users names
+sets:
+  - users[i].name.first
+  - users[i].name.last
+  - users[i].name.middle
+  - users[i].name.suffix
+question: |
+  % if i == 0 and al_person_answering == "user":
+  What is your name?
+  % elif al_form_type in ['starts_case', 'existing_case', 'appeal']:
+  Who is the ${ ordinal(i) } person on your side of the case?
+  % else:
+  What is the name of the ${ ordinal(i) } person who is adding their
+  name to this form with you?
+  % endif
+fields:
+  - code: |
+      users[i].name_fields()
+---
+id: user address
+sets:
+  - users[i].address.address
+  - users[i].address.city
+  - users[i].address.state
+  - users[i].address.zip
+  - users[i].address.unit
+  - users[i].address.country
+question: |
+  % if i == 0 and al_person_answering == "user":
+  What is your address?
+  % else:
+  What is ${ users[i] }'s address?
+  % endif
+fields:
+  - label: |
+      % if i > 0 and al_person_answering == "user":
+      Same as your address
+      % else:
+      Same as ${ users[0] }'s address
+      % endif
+    field: users[i].address
+    datatype: object_radio
+    choices:
+      - users[0].address if defined("users[0].address.address") else None
+    object labeler: |
+      lambda y: y.on_one_line()
+    none of the above: |
+      Somewhere else
+    disable others: True
+    show if:
+      code: |
+        i > 0 and defined("users[0].address.address")
+  - code: |
+      users[i].address_fields(
+          country_code=AL_DEFAULT_COUNTRY, default_state=AL_DEFAULT_STATE
+      )
+---
+id: user phone number
+question: |
+  What is ${ users[i] }'s phone number?
+fields:
+  - Phone: users[i].phone_number
+    datatype: al_international_phone
+---
+id: user email
+question: |
+  What is ${ users[i] }'s email address?
+fields:
+  - Email: users[i].email
+    datatype: email
+---
+id: any residences
+question: |
+  Will this form include any residences?
+fields:
+  - no label: residences.there_are_any
+    datatype: yesnoradio
+---
+id: residences item
+question: |
+  Tell us about the ${ ordinal(i) } residence
+fields:
+  - "Person name": residences[i].person_name
+  - "Address": residences[i].address
+  - "Dates": residences[i].dates
+---
+id: another residence
+question: |
+  Is there another residence to tell us about?
+fields:
+  - no label: residences.there_is_another
+    datatype: yesnoradio
+---
+id: residences item is complete
+code: |
+  residences[i].person_name
+  residences[i].address
+  residences[i].dates
+  residences[i].complete = True
+---
+id: more about properties
+question: |
+  More about the ${ ordinal(i) } property
+fields:
+  - "Name": properties[i].name
+  - "Location": properties[i].location
+---
+id: properties item is complete
+code: |
+  properties[i].market_value
+  properties[i].name
+  properties[i].location
+  properties[i].complete = True
+---
+id: preview labeled_labeled_ccgn001withfieldswithfields
+question: |
+  Preview your form before you sign it
+subquestion: |
+  Here is a preview of the form you will sign on the next page.
+
+  ${ al_court_bundle.as_pdf(key='preview') }
+
+  Open the form preview in a new tab. Use the "Edit answers" button to edit your
+  answers.
+
+  ${ action_button_html(url_action('review_labeled_labeled_ccgn001withfieldswithfields'), label=word('Edit answers'), color='info') }
+
+  Return to this interview tab to continue and sign your form.
+continue button field: labeled_labeled_ccgn001withfieldswithfields_preview_question
+---
+code: |
+  signature_fields = ['attorneys[0].signature', 'users[0].signature']
+---
+code: |
+  # This is a placeholder for the addresses that will be searched
+  # for matching address to court. Edit if court venue is based on
+  # a different address than the user's
+  [user.address.address for user in users.complete_elements()]
+  addresses_to_search = [user.address for user in users.complete_elements()]
+---
+id: labeled labeled ccgn001withfieldswithfields review screen
+event: review_labeled_labeled_ccgn001withfieldswithfields
+question: |
+  Review your answers
+review:
+  - Edit: users.revisit
+    button: |
+      **Users**
+
+      % for item in users:
+        * ${ item }
+      % endfor
+  - Edit: trial_court_circuit_yes
+    button: |
+      **Trial Court Information**
+
+      Trial court circuit: ${ word(yesno(trial_court_circuit_yes)) if defined('trial_court_circuit_yes') else '' }
+
+      Trial court orphans: ${ word(yesno(trial_court_orphans_yes)) if defined('trial_court_orphans_yes') else '' }
+  - Edit: trial_court_name
+    button: |
+      **Court name and address**
+
+      Court name: ${ showifdef('trial_court_name') }
+
+      Trial court address: ${ trial_court_address.on_one_line() if defined('trial_court_address.address') else '' }
+  - Edit: docket_number
+    button: |
+      **Docket number**
+
+      Docket number: ${ showifdef('docket_number') }
+
+      Docket number 2: ${ showifdef('docket_number_2') }
+  - Edit: guardianship_person_yes
+    button: |
+      **Guardianship Type**
+
+      Guardianship of person: ${ word(yesno(guardianship_person_yes)) if defined('guardianship_person_yes') else '' }
+
+      Guardianship of property: ${ word(yesno(guardianship_property_yes)) if defined('guardianship_property_yes') else '' }
+
+      Guardianship of person and property: ${ word(yesno(guardianship_person_property_yes)) if defined('guardianship_person_property_yes') else '' }
+  - Edit: children1_parent1_name
+    button: |
+      **Minor Information**
+
+      First parent of child one: ${ showifdef('children1_parent1_name') }
+
+      Second parent of child one: ${ showifdef('children1_parent2_name') }
+
+      Home address of child one: ${ showifdef('children1_residence_address') }
+
+      Current location of children: ${ showifdef('children_current_location') }
+  - Edit: petitioner_rel
+    button: |
+      **Petitioner Relationship**
+
+      Relationship of petitioner: ${ showifdef('petitioner_rel') }
+
+      Children VA beneficiary status: ${ word(yesno(children_va_beneficiary)) if defined('children_va_beneficiary') else '' }
+  - Edit: users1_conviction
+    button: |
+      **Petitioner's Criminal History**
+
+      Convicted of a crime: ${ word(yesno(users1_conviction)) if defined('users1_conviction') else '' }
+
+      % if defined('users1_conviction') and users1_conviction:
+      Conviction name: ${ showifdef('users1_conviction_name') }
+
+      Conviction year: ${ showifdef('users1_conviction_year') }
+
+      Conviction court: ${ showifdef('users1_conviction_court') }
+
+      Good cause for appointment: ${ showifdef('users1_good_cause') }
+      % endif
+  - Edit: prospective_guardian_person_rel
+    button: |
+      **Prospective Guardian of Person**
+
+      Relationship of prospective guardian: ${ showifdef('prospective_guardian_person_rel') }
+
+      Convicted of a crime: ${ word(yesno(prospective_guardian_person_conviction)) if defined('prospective_guardian_person_conviction') else '' }
+
+      % if defined('prospective_guardian_person_conviction') and prospective_guardian_person_conviction:
+      Conviction name: ${ showifdef('prospective_guardian_person_conviction_name') }
+
+      Conviction year: ${ showifdef('prospective_guardian_person_conviction_year') }
+
+      Conviction court: ${ showifdef('prospective_guardian_person_conviction_court') }
+
+      Good cause: ${ showifdef('prospective_guardian_person_good_cause') }
+      % endif
+  - Edit: prospective_guardian_property_name
+    button: |
+      **Prospective Guardian of Property**
+
+      Prospective guardian property name: ${ showifdef('prospective_guardian_property_name') }
+
+      Prospective guardian property age: ${ showifdef('prospective_guardian_property_age') }
+
+      Relationship of property guardian: ${ showifdef('prospective_guardian_property_rel') }
+
+      Convicted of a crime: ${ word(yesno(prospective_guardian_property_conviction)) if defined('prospective_guardian_property_conviction') else '' }
+
+      % if defined('prospective_guardian_property_conviction') and prospective_guardian_property_conviction:
+      Conviction name: ${ showifdef('prospective_guardian_property_conviction_name') }
+
+      Conviction year: ${ showifdef('prospective_guardian_property_conviction_year') }
+
+      Conviction court: ${ showifdef('prospective_guardian_property_conviction_court') }
+
+      Good cause: ${ showifdef('prospective_guardian_property_good_cause') }
+      % endif
+  - Edit: guardian_address
+    button: |
+      **Interested people**
+
+      Address of guardian: ${ showifdef('guardian_address') }
+
+      Address of power of attorney: ${ showifdef('power_of_attorney_address') }
+
+      Address of minor's attorney: ${ showifdef('minor_attorney_address') }
+
+      Address of responsible person: ${ showifdef('responsible_person_address') }
+
+      Address of government agency: ${ showifdef('government_agency_address') }
+
+      Address of interested person: ${ showifdef('interested_person_address') }
+
+      Address of control person: ${ showifdef('control_person_address') }
+
+      Address of allowed guardian: ${ showifdef('eligible_guardian_address') }
+  - Edit: guardianship_reason
+    button: |
+      **Reason for Guardianship**
+
+      Reason for guardianship: ${ showifdef('guardianship_reason') }
+  - Edit: proceedings_minor1
+    button: |
+      **Proceedings Information**
+
+      Proceedings about minor one: ${ showifdef('proceedings_minor1') }
+
+      Proceedings about the person asking: ${ showifdef('proceedings_petitioner1') }
+  - Edit: attorney_signed_date
+    button: |
+      **Attorney Information**
+
+      Date attorney signed: ${ showifdef('attorney_signed_date') }
+
+      Attorney number: ${ showifdef('attorney_number') }
+
+      Attorney fax number: ${ showifdef('attorney_fax') }
+
+      Attorney address city and zip: ${ showifdef('attorney_address_city_zip') }
+  - Edit: users1_address_city_zip
+    button: |
+      **Petitioner Information**
+
+      User1 address city and zip: ${ showifdef('users1_address_city_zip') }
+
+      User1 fax number: ${ showifdef('users1_fax') }
+
+      Date user1 signed: ${ showifdef('users1_signed_date') }
+  - Edit: users1_interest_in_property
+    button: |
+      **User1 interest in property**
+
+      User1 interest in property: ${ showifdef('users1_interest_in_property') }
+  - Edit: trial_court.phone_number
+    button: |
+      **Trial court phone number**
+
+      Phone number: ${ trial_court.phone_number if defined('trial_court.phone_number') else '' }
+  - Edit: children.revisit
+    button: |
+      **Children**
+
+      % for item in children:
+        * ${ item }
+      % endfor
+  - Edit: prospective_guardian_person.revisit
+    button: |
+      **Prospective guardian person**
+
+      % for item in prospective_guardian_person:
+        * ${ item }
+      % endfor
+  - Edit: contacts.revisit
+    button: |
+      **Contacts**
+
+      % for item in contacts:
+        * ${ item }
+      % endfor
+  - Edit: parents.revisit
+    button: |
+      **Parents**
+
+      % for item in parents:
+        * ${ item }
+      % endfor
+  - Edit: siblings.revisit
+    button: |
+      **Siblings**
+
+      % for item in siblings:
+        * ${ item }
+      % endfor
+  - Edit: heirs.revisit
+    button: |
+      **Heirs**
+
+      % for item in heirs:
+        * ${ item }
+      % endfor
+  - Edit: guardians.revisit
+    button: |
+      **Guardians**
+
+      % for item in guardians:
+        * ${ item }
+      % endfor
+  - Edit: power_of_attorney.revisit
+    button: |
+      **Power of attorney**
+
+      % for item in power_of_attorney:
+        * ${ item }
+      % endfor
+  - Edit: minor_attorney.revisit
+    button: |
+      **Minor attorney**
+
+      % for item in minor_attorney:
+        * ${ item }
+      % endfor
+  - Edit: responsible_person.revisit
+    button: |
+      **Responsible person**
+
+      % for item in responsible_person:
+        * ${ item }
+      % endfor
+  - Edit: government_agency.revisit
+    button: |
+      **Government agency**
+
+      % for item in government_agency:
+        * ${ item }
+      % endfor
+  - Edit: interested_person.revisit
+    button: |
+      **Interested person**
+
+      % for item in interested_person:
+        * ${ item }
+      % endfor
+  - Edit: control_person.revisit
+    button: |
+      **Control person**
+
+      % for item in control_person:
+        * ${ item }
+      % endfor
+  - Edit: eligible_guardian.revisit
+    button: |
+      **Eligible guardian**
+
+      % for item in eligible_guardian:
+        * ${ item }
+      % endfor
+  - Edit: residences.revisit
+    button: |
+      **Residences**
+
+      % for item in residences:
+        * ${ item }
+      % endfor
+  - Edit: properties.revisit
+    button: |
+      **Properties**
+
+      % for item in properties:
+        * ${ item }
+      % endfor
+  - Edit: attorneys.revisit
+    button: |
+      **Attorneys**
+
+      % for item in attorneys:
+        * ${ item }
+      % endfor
+---
+id: edit users
+continue button field: users.revisit
+question: |
+  Edit users
+subquestion: |
+  ${ users.table }
+
+  ${ users.add_action() }
+---
+table: users.table
+rows: users
+columns:
+  - Name: |
+      row_item.name_full() if defined("row_item.name.first") else ""
+  - Birthdate: |
+      row_item.birthdate if defined("row_item.birthdate") else ""
+  - Address: |
+      row_item.address.block() if defined("row_item.address.address") else ""
+  - Phone number: |
+      row_item.phone_number if defined("row_item.phone_number") else ""
+  - Email: |
+      row_item.email if defined("row_item.email") else ""
+  - Signature: |
+      row_item.signature if defined("row_item.signature") else ""
+edit:
+  - name.first
+  - birthdate
+  - address.address
+  - phone_number
+  - email
+confirm: True
+---
+id: edit children
+continue button field: children.revisit
+question: |
+  Edit children
+subquestion: |
+  ${ children.table }
+
+  ${ children.add_action() }
+---
+table: children.table
+rows: children
+columns:
+  - Name: |
+      row_item.name_full() if defined("row_item.name.first") else ""
+  - Birthdate: |
+      row_item.birthdate if defined("row_item.birthdate") else ""
+  - Gender: |
+      row_item.gender if defined("row_item.gender") else ""
+edit:
+  - name.first
+  - birthdate
+  - gender
+confirm: True
+---
+id: edit prospective guardian person
+continue button field: prospective_guardian_person.revisit
+question: |
+  Edit prospective_guardian_person
+subquestion: |
+  ${ prospective_guardian_person.table }
+
+  ${ prospective_guardian_person.add_action() }
+---
+table: prospective_guardian_person.table
+rows: prospective_guardian_person
+columns:
+  - Name: |
+      row_item.name_full() if defined("row_item.name.first") else ""
+  - Birthdate: |
+      row_item.birthdate if defined("row_item.birthdate") else ""
+edit:
+  - name.first
+  - birthdate
+confirm: True
+---
+id: edit contacts
+continue button field: contacts.revisit
+question: |
+  Edit contacts
+subquestion: |
+  ${ contacts.table }
+
+  ${ contacts.add_action() }
+---
+table: contacts.table
+rows: contacts
+columns:
+  - Name: |
+      row_item.name_full() if defined("row_item.name.first") else ""
+  - Address: |
+      row_item.address.block() if defined("row_item.address.address") else ""
+edit:
+  - name.first
+  - address.address
+confirm: True
+---
+id: edit parents
+continue button field: parents.revisit
+question: |
+  Edit parents
+subquestion: |
+  ${ parents.table }
+
+  ${ parents.add_action() }
+---
+table: parents.table
+rows: parents
+columns:
+  - Name: |
+      row_item.name_full() if defined("row_item.name.first") else ""
+  - Address: |
+      row_item.address.block() if defined("row_item.address.address") else ""
+  - Phone number: |
+      row_item.phone_number if defined("row_item.phone_number") else ""
+  - Email: |
+      row_item.email if defined("row_item.email") else ""
+edit:
+  - name.first
+  - address.address
+  - phone_number
+  - email
+confirm: True
+---
+id: edit siblings
+continue button field: siblings.revisit
+question: |
+  Edit siblings
+subquestion: |
+  ${ siblings.table }
+
+  ${ siblings.add_action() }
+---
+table: siblings.table
+rows: siblings
+columns:
+  - Name: |
+      row_item.name_full() if defined("row_item.name.first") else ""
+  - Address: |
+      row_item.address.block() if defined("row_item.address.address") else ""
+  - Phone number: |
+      row_item.phone_number if defined("row_item.phone_number") else ""
+  - Email: |
+      row_item.email if defined("row_item.email") else ""
+edit:
+  - name.first
+  - address.address
+  - phone_number
+  - email
+confirm: True
+---
+id: edit heirs
+continue button field: heirs.revisit
+question: |
+  Edit heirs
+subquestion: |
+  ${ heirs.table }
+
+  ${ heirs.add_action() }
+---
+table: heirs.table
+rows: heirs
+columns:
+  - Name: |
+      row_item.name_full() if defined("row_item.name.first") else ""
+  - Address: |
+      row_item.address.block() if defined("row_item.address.address") else ""
+  - Phone number: |
+      row_item.phone_number if defined("row_item.phone_number") else ""
+  - Email: |
+      row_item.email if defined("row_item.email") else ""
+edit:
+  - name.first
+  - address.address
+  - phone_number
+  - email
+confirm: True
+---
+id: edit guardians
+continue button field: guardians.revisit
+question: |
+  Edit guardians
+subquestion: |
+  ${ guardians.table }
+
+  ${ guardians.add_action() }
+---
+table: guardians.table
+rows: guardians
+columns:
+  - Name: |
+      row_item.name_full() if defined("row_item.name.first") else ""
+  - Phone number: |
+      row_item.phone_number if defined("row_item.phone_number") else ""
+  - Email: |
+      row_item.email if defined("row_item.email") else ""
+edit:
+  - name.first
+  - phone_number
+  - email
+confirm: True
+---
+id: edit power of attorney
+continue button field: power_of_attorney.revisit
+question: |
+  Edit power_of_attorney
+subquestion: |
+  ${ power_of_attorney.table }
+
+  ${ power_of_attorney.add_action() }
+---
+table: power_of_attorney.table
+rows: power_of_attorney
+columns:
+  - Name: |
+      row_item.name_full() if defined("row_item.name.first") else ""
+  - Phone number: |
+      row_item.phone_number if defined("row_item.phone_number") else ""
+  - Email: |
+      row_item.email if defined("row_item.email") else ""
+edit:
+  - name.first
+  - phone_number
+  - email
+confirm: True
+---
+id: edit minor attorney
+continue button field: minor_attorney.revisit
+question: |
+  Edit minor_attorney
+subquestion: |
+  ${ minor_attorney.table }
+
+  ${ minor_attorney.add_action() }
+---
+table: minor_attorney.table
+rows: minor_attorney
+columns:
+  - Name: |
+      row_item.name_full() if defined("row_item.name.first") else ""
+  - Phone number: |
+      row_item.phone_number if defined("row_item.phone_number") else ""
+  - Email: |
+      row_item.email if defined("row_item.email") else ""
+edit:
+  - name.first
+  - phone_number
+  - email
+confirm: True
+---
+id: edit responsible person
+continue button field: responsible_person.revisit
+question: |
+  Edit responsible_person
+subquestion: |
+  ${ responsible_person.table }
+
+  ${ responsible_person.add_action() }
+---
+table: responsible_person.table
+rows: responsible_person
+columns:
+  - Name: |
+      row_item.name_full() if defined("row_item.name.first") else ""
+  - Phone number: |
+      row_item.phone_number if defined("row_item.phone_number") else ""
+  - Email: |
+      row_item.email if defined("row_item.email") else ""
+edit:
+  - name.first
+  - phone_number
+  - email
+confirm: True
+---
+id: edit government agency
+continue button field: government_agency.revisit
+question: |
+  Edit government_agency
+subquestion: |
+  ${ government_agency.table }
+
+  ${ government_agency.add_action() }
+---
+table: government_agency.table
+rows: government_agency
+columns:
+  - Name: |
+      row_item.name_full() if defined("row_item.name.first") else ""
+  - Phone number: |
+      row_item.phone_number if defined("row_item.phone_number") else ""
+  - Email: |
+      row_item.email if defined("row_item.email") else ""
+edit:
+  - name.first
+  - phone_number
+  - email
+confirm: True
+---
+id: edit interested person
+continue button field: interested_person.revisit
+question: |
+  Edit interested_person
+subquestion: |
+  ${ interested_person.table }
+
+  ${ interested_person.add_action() }
+---
+table: interested_person.table
+rows: interested_person
+columns:
+  - Name: |
+      row_item.name_full() if defined("row_item.name.first") else ""
+  - Phone number: |
+      row_item.phone_number if defined("row_item.phone_number") else ""
+  - Email: |
+      row_item.email if defined("row_item.email") else ""
+edit:
+  - name.first
+  - phone_number
+  - email
+confirm: True
+---
+id: edit control person
+continue button field: control_person.revisit
+question: |
+  Edit control_person
+subquestion: |
+  ${ control_person.table }
+
+  ${ control_person.add_action() }
+---
+table: control_person.table
+rows: control_person
+columns:
+  - Phone number: |
+      row_item.phone_number if defined("row_item.phone_number") else ""
+  - Email: |
+      row_item.email if defined("row_item.email") else ""
+  - Name: |
+      row_item.name_full() if defined("row_item.name.first") else ""
+edit:
+  - phone_number
+  - email
+  - name.first
+confirm: True
+---
+id: edit eligible guardian
+continue button field: eligible_guardian.revisit
+question: |
+  Edit eligible_guardian
+subquestion: |
+  ${ eligible_guardian.table }
+
+  ${ eligible_guardian.add_action() }
+---
+table: eligible_guardian.table
+rows: eligible_guardian
+columns:
+  - Name: |
+      row_item.name_full() if defined("row_item.name.first") else ""
+  - Phone number: |
+      row_item.phone_number if defined("row_item.phone_number") else ""
+  - Email: |
+      row_item.email if defined("row_item.email") else ""
+edit:
+  - name.first
+  - phone_number
+  - email
+confirm: True
+---
+id: edit residences
+continue button field: residences.revisit
+question: |
+  Edit residences
+subquestion: |
+  ${ residences.table }
+
+  ${ residences.add_action() }
+---
+table: residences.table
+rows: residences
+columns:
+  - Person name: |
+      row_item.person_name if defined("row_item.person_name") else ""
+  - Address: |
+      row_item.address.block() if defined("row_item.address.address") else ""
+  - Dates: |
+      row_item.dates if defined("row_item.dates") else ""
+edit:
+  - person_name
+  - address.address
+  - dates
+confirm: True
+---
+id: edit properties
+continue button field: properties.revisit
+question: |
+  Edit properties
+subquestion: |
+  ${ properties.table }
+
+  ${ properties.add_action() }
+---
+table: properties.table
+rows: properties
+columns:
+  - Name: |
+      row_item.name_full() if defined("row_item.name.first") else ""
+  - Location: |
+      row_item.location if defined("row_item.location") else ""
+  - Market value: |
+      row_item.market_value if defined("row_item.market_value") else ""
+  - Owner: |
+      row_item.owner if defined("row_item.owner") else ""
+edit:
+  - name.first
+  - location
+  - market_value
+  - owner
+confirm: True
+---
+id: edit attorneys
+continue button field: attorneys.revisit
+question: |
+  Edit attorneys
+subquestion: |
+  ${ attorneys.table }
+
+  ${ attorneys.add_action() }
+---
+table: attorneys.table
+rows: attorneys
+columns:
+  - Signature: |
+      row_item.signature if defined("row_item.signature") else ""
+  - Phone number: |
+      row_item.phone_number if defined("row_item.phone_number") else ""
+  - Name: |
+      row_item.name_full() if defined("row_item.name.first") else ""
+  - Address: |
+      row_item.address.block() if defined("row_item.address.address") else ""
+  - Email: |
+      row_item.email if defined("row_item.email") else ""
+edit:
+  - phone_number
+  - name.first
+  - address.address
+  - email
+confirm: True
+---
+id: download labeled_labeled_ccgn001withfieldswithfields
+event: labeled_labeled_ccgn001withfieldswithfields_download
+question: |
+  All done
+subquestion: |
+  % if defined("users[0]"):
+  Thank you ${ users }. Your form is ready to download and deliver.
+  % else:
+  Thank you. Your form is ready to download and deliver.
+  % endif
+
+  Use the options on this page to view, download and send your form. Use the
+  "Edit answers" button to fix any mistakes.
+
+  ${ action_button_html(url_action('review_labeled_labeled_ccgn001withfieldswithfields'), label=word('Edit answers'), color='info') }
+
+  ${ al_user_bundle.download_list_html() }
+
+  ${ al_user_bundle.send_button_html(show_editable_checkbox=False) }
+
+progress: 100
+---
+# ALDocument objects specify the metadata for each template
+objects:
+  - labeled_labeled_ccgn001withfieldswithfields_Post_interview_instructions: ALDocument.using(filename="labeled_labeled_ccgn001withfieldswithfields_next_steps.docx", title=str(labeled_labeled_ccgn001withfieldswithfields_Post_interview_instructions_title), enabled=al_next_steps_enabled, has_addendum=False)
+  - labeled_labeled_ccgn001withfieldswithfields_attachment: ALDocument.using(filename="labeled_labeled_ccgn001withfieldswithfields", title=str(labeled_labeled_ccgn001withfieldswithfields_attachment_title), enabled=True, has_addendum=True, default_overflow_message=AL_DEFAULT_OVERFLOW_MESSAGE)
+---
+# Bundles group the ALDocuments into separate downloads, such as for court and for the user
+objects:
+  - al_user_bundle: ALDocumentBundle.using(elements=[labeled_labeled_ccgn001withfieldswithfields_Post_interview_instructions, labeled_labeled_ccgn001withfieldswithfields_attachment], filename="labeled_labeled_ccgn001withfieldswithfields", enabled=True, title=str(al_user_bundle_title))
+  - al_court_bundle: ALDocumentBundle.using(elements=[labeled_labeled_ccgn001withfieldswithfields_attachment], filename="labeled_labeled_ccgn001withfieldswithfields", enabled=True, title=str(al_court_bundle_title))
+---
+template: labeled_labeled_ccgn001withfieldswithfields_Post_interview_instructions_title
+content: |
+  Instructions
+---
+template: labeled_labeled_ccgn001withfieldswithfields_attachment_title
+content: |
+  Labeled labeled ccgn001-with-fields-with-fields
+---
+template: al_user_bundle_title
+content: |
+  All forms to download for your records
+---
+template: al_court_bundle_title
+content: |
+  All forms to deliver to court
+---
+# Each attachment defines a key in an ALDocument. We use `i` as the placeholder here so the
+# same template is used for "preview" and "final" keys, and logic in the template checks
+# the value of `i` to show or hide the user's signature
+attachment:
+  name: Post-interview-Instructions
+  filename: labeled_labeled_ccgn001withfieldswithfields_next_steps
+  docx template file: labeled_labeled_ccgn001withfieldswithfields_next_steps.docx
+  variable name: labeled_labeled_ccgn001withfieldswithfields_Post_interview_instructions[i]
+  skip undefined: True
+  tagged pdf: True
+---
+attachment:
+  name: labeled labeled ccgn001withfieldswithfields
+  filename: labeled_labeled_ccgn001withfieldswithfields
+  variable name: labeled_labeled_ccgn001withfieldswithfields_attachment[i]
+  skip undefined: True
+  pdf template file: labeled_labeled_ccgn001-with-fields-with-fields.pdf
+  fields:
+      - "trial_court_county": ${ trial_court.address.county }
+      - "trial_court_circuit_yes": ${ trial_court_circuit_yes }
+      - "trial_court_orphans_yes": ${ trial_court_orphans_yes }
+      # FIX: trial_court_address is now an ALAddress object
+      - "trial_court_address": ${ trial_court_address.on_one_line() }
+      - "trial_court_phone_number": ${ trial_court.phone_number }
+      - "docket_number": ${ docket_number }
+      - "docket_number__1": ${ docket_number }
+      - "docket_number__2": ${ docket_number }
+      - "docket_number__3": ${ docket_number }
+      - "docket_number__4": ${ docket_number }
+      - "docket_number__5": ${ docket_number }
+      - "children1_name": ${ children[0] }
+      - "children1_name__1": ${ children[0] }
+      - "docket_number_2": ${ docket_number_2 }
+      - "guardianship_person_yes": ${ guardianship_person_yes }
+      - "guardianship_person_yes__1": ${ guardianship_person_yes }
+      - "guardianship_property_yes": ${ guardianship_property_yes }
+      - "guardianship_property_yes__1": ${ guardianship_property_yes }
+      - "guardianship_person_property_yes": ${ guardianship_person_property_yes }
+      - "guardianship_person_property_yes__1": ${ guardianship_person_property_yes }
+      - "users1_name": ${ users[0] }
+      - "users1_name__1": ${ users[0] }
+      - "users1_age": ${ users[0].age_in_years() }
+      - "users1_address_address": ${ users[0].address.address }
+      - "users1_address_address__1": ${ users[0].address.address }
+      - "users1_phone_number": ${ users[0].phone_number }
+      - "users1_phone_number__3": ${ users[0].phone_number }
+      - "users1_email": ${ users[0].email }
+      - "users1_email__1": ${ users[0].email }
+      - "users1_email__2": ${ users[0].email }
+      - "children1_parent1_name": ${ children1_parent1_name }
+      - "children1_age": ${ children[0].age_in_years() }
+      - "children1_birthdate": ${ children[0].birthdate.format() }
+      - "children1_gender": ${ children[0].gender }
+      - "children1_parent2_name": ${ children1_parent2_name }
+      - "children1_residence_address": ${ children1_residence_address }
+      - "children2_parent1_name": ${ children2_parent1_name }
+      - "children2_name": ${ children.item(1) }
+      - "children2_age": ${ children.item(1).age_in_years() }
+      - "children2_birthdate": ${ children.item(1).birthdate.format() }
+      - "children2_gender": ${ children.item(1).gender }
+      - "children2_parent2_name": ${ children2_parent2_name }
+      - "children2_residence_address": ${ children2_residence_address }
+      - "children3_parent1_name": ${ children3_parent1_name }
+      - "children3_name": ${ children.item(2) }
+      - "children3_age": ${ children.item(2).age_in_years() }
+      - "children3_birthdate": ${ children.item(2).birthdate.format() }
+      - "children3_gender": ${ children.item(2).gender }
+      - "children3_parent2_name": ${ children3_parent2_name }
+      - "children3_residence_address": ${ children3_residence_address }
+      - "children4_parent1_name": ${ children4_parent1_name }
+      - "children4_name": ${ children.item(3) }
+      - "children4_age": ${ children.item(3).age_in_years() }
+      - "children4_birthdate": ${ children.item(3).birthdate.format() }
+      - "children4_gender": ${ children.item(3).gender }
+      - "children4_parent2_name": ${ children4_parent2_name }
+      - "children4_residence_address": ${ children4_residence_address }
+      - "children5_parent1_name": ${ children5_parent1_name }
+      - "children5_name": ${ children.item(4) }
+      - "children5_age": ${ children.item(4).age_in_years() }
+      - "children5_birthdate": ${ children.item(4).birthdate.format() }
+      - "children5_gender": ${ children.item(4).gender }
+      - "children5_parent2_name": ${ children5_parent2_name }
+      - "children5_residence_address": ${ children5_residence_address }
+      - "children6_parent1_name": ${ children6_parent1_name }
+      - "children6_name": ${ children.item(5) }
+      - "children6_age": ${ children.item(5).age_in_years() }
+      - "children6_birthdate": ${ children.item(5).birthdate.format() }
+      - "children6_gender": ${ children.item(5).gender }
+      - "children6_parent2_name": ${ children6_parent2_name }
+      - "children6_residence_address": ${ children6_residence_address }
+      - "children_current_location": ${ children_current_location }
+      - "petitioner_rel": ${ petitioner_rel }
+      - "children_va_beneficiary_yes": ${ children_va_beneficiary }
+      - "children_va_beneficiary_no": ${ not children_va_beneficiary }
+      - "users1_conviction_yes": ${ users1_conviction }
+      - "users1_conviction_no": ${ not users1_conviction }
+      - "users1_conviction_name": ${ users1_conviction_name if users1_conviction else '' }
+      - "users1_conviction_year": ${ users1_conviction_year if users1_conviction else '' }
+      - "users1_conviction_court": ${ users1_conviction_court if users1_conviction else '' }
+      - "users1_good_cause": ${ users1_good_cause if users1_conviction else '' }
+      - "prospective_guardian_person_name": ${ prospective_guardian_person[0] }
+      - "prospective_guardian_person_name__1": ${ prospective_guardian_person[0] }
+      - "prospective_guardian_person_name__2": ${ prospective_guardian_person[0] }
+      - "prospective_guardian_person_name__3": ${ prospective_guardian_person[0] }
+      - "prospective_guardian_person_age": ${ prospective_guardian_person[0].age_in_years() }
+      - "prospective_guardian_person_rel": ${ prospective_guardian_person_rel }
+      - "prospective_guardian_person_conviction_yes": ${ prospective_guardian_person_conviction }
+      - "prospective_guardian_person_conviction_no": ${ not prospective_guardian_person_conviction }
+      - "prospective_guardian_person_conviction_year": ${ prospective_guardian_person_conviction_year if prospective_guardian_person_conviction else '' }
+      - "prospective_guardian_person_conviction_name": ${ prospective_guardian_person_conviction_name if prospective_guardian_person_conviction else '' }
+      - "prospective_guardian_person_conviction_court": ${ prospective_guardian_person_conviction_court if prospective_guardian_person_conviction else '' }
+      - "prospective_guardian_person_good_cause": ${ prospective_guardian_person_good_cause if prospective_guardian_person_conviction else '' }
+      - "prospective_guardian_property_name": ${ prospective_guardian_property_name }
+      - "prospective_guardian_property_name__1": ${ prospective_guardian_property_name }
+      - "prospective_guardian_property_name__2": ${ prospective_guardian_property_name }
+      - "prospective_guardian_property_age": ${ prospective_guardian_property_age }
+      - "prospective_guardian_property_rel": ${ prospective_guardian_property_rel }
+      - "prospective_guardian_property_conviction_yes": ${ prospective_guardian_property_conviction }
+      - "prospective_guardian_property_conviction_no": ${ not prospective_guardian_property_conviction }
+      - "prospective_guardian_property_conviction_year": ${ prospective_guardian_property_conviction_year if prospective_guardian_property_conviction else '' }
+      - "prospective_guardian_property_conviction_name": ${ prospective_guardian_property_conviction_name if prospective_guardian_property_conviction else '' }
+      - "prospective_guardian_property_conviction_court": ${ prospective_guardian_property_conviction_court if prospective_guardian_property_conviction else '' }
+      - "prospective_guardian_property_good_cause": ${ prospective_guardian_property_good_cause if prospective_guardian_property_conviction else '' }
+      - "contacts1_name": ${ contacts[0] }
+      - "contacts1_address_address": ${ contacts[0].address.address }
+      - "parents1_name": ${ parents[0] }
+      - "parents1_address_address": ${ parents[0].address.address }
+      - "parents1_phone_number": ${ parents[0].phone_number }
+      - "parents1_email": ${ parents[0].email }
+      - "parents2_name": ${ parents.item(1) }
+      - "parents2_address_address": ${ parents.item(1).address.address }
+      - "parents2_phone_number": ${ parents.item(1).phone_number }
+      - "parents2_email": ${ parents.item(1).email }
+      - "siblings1_name": ${ siblings[0] }
+      - "siblings1_address_address": ${ siblings[0].address.address }
+      - "siblings1_phone_number": ${ siblings[0].phone_number }
+      - "siblings1_email": ${ siblings[0].email }
+      - "siblings2_name": ${ siblings.item(1) }
+      - "siblings2_address_address": ${ siblings.item(1).address.address }
+      - "siblings2_phone_number": ${ siblings.item(1).phone_number }
+      - "siblings2_email": ${ siblings.item(1).email }
+      - "siblings3_name": ${ siblings.item(2) }
+      - "siblings3_address_address": ${ siblings.item(2).address.address }
+      - "siblings3_phone_number": ${ siblings.item(2).phone_number }
+      - "siblings3_email": ${ siblings.item(2).email }
+      - "siblings4_name": ${ siblings.item(3) }
+      - "siblings4_address_address": ${ siblings.item(3).address.address }
+      - "siblings4_email": ${ siblings.item(3).email }
+      - "siblings4_phone_number": ${ siblings.item(3).phone_number }
+      - "heirs1_name": ${ heirs[0] }
+      - "heirs1_address_address": ${ heirs[0].address.address }
+      - "heirs1_phone_number": ${ heirs[0].phone_number }
+      - "heirs1_email": ${ heirs[0].email }
+      - "guardian_name": ${ guardians[0] }
+      - "guardian_address": ${ guardian_address }
+      - "guardian_phone_number": ${ guardians[0].phone_number }
+      - "guardian_email": ${ guardians[0].email }
+      - "power_of_attorney_name": ${ power_of_attorney[0] }
+      - "power_of_attorney_address": ${ power_of_attorney_address }
+      - "power_of_attorney_phone_number": ${ power_of_attorney[0].phone_number }
+      - "power_of_attorney_email": ${ power_of_attorney[0].email }
+      - "minor_attorney_name": ${ minor_attorney[0] }
+      - "minor_attorney_address": ${ minor_attorney_address }
+      - "minor_attorney_phone_number": ${ minor_attorney[0].phone_number }
+      - "minor_attorney_email": ${ minor_attorney[0].email }
+      - "responsible_person_name": ${ responsible_person[0] }
+      - "responsible_person_address": ${ responsible_person_address }
+      - "responsible_person_phone_number": ${ responsible_person[0].phone_number }
+      - "responsible_person_email": ${ responsible_person[0].email }
+      - "government_agency_name": ${ government_agency[0] }
+      - "government_agency_address": ${ government_agency_address }
+      - "government_agency_phone_number": ${ government_agency[0].phone_number }
+      - "government_agency_email": ${ government_agency[0].email }
+      - "interested_person_name": ${ interested_person[0] }
+      - "interested_person_address": ${ interested_person_address }
+      - "interested_person_phone_number": ${ interested_person[0].phone_number }
+      - "interested_person_email": ${ interested_person[0].email }
+      - "control_person_phone_number": ${ control_person[0].phone_number }
+      - "control_person_email": ${ control_person[0].email }
+      - "control_person_name": ${ control_person[0] }
+      - "control_person_address": ${ control_person_address }
+      - "eligible_guardian_name": ${ eligible_guardian[0] }
+      - "eligible_guardian_address": ${ eligible_guardian_address }
+      - "eligible_guardian_phone_number": ${ eligible_guardian[0].phone_number }
+      - "eligible_guardian_email": ${ eligible_guardian[0].email }
+      - "residence1_person_name": ${ residences.item(0).person_name }
+      - "residence1_address": ${ residences.item(0).address }
+      - "residence1_dates": ${ residences.item(0).dates }
+      - "residence2_person_name": ${ residences.item(1).person_name }
+      - "residence2_address": ${ residences.item(1).address }
+      - "residence2_dates": ${ residences.item(1).dates }
+      - "residence3_person_name": ${ residences.item(2).person_name }
+      - "residence3_address": ${ residences.item(2).address }
+      - "residence3_dates": ${ residences.item(2).dates }
+      - "residence4_person_name": ${ residences.item(3).person_name }
+      - "residence4_address": ${ residences.item(3).address }
+      - "residence4_dates": ${ residences.item(3).dates }
+      - "residence5_person_name": ${ residences.item(4).person_name }
+      - "residence5_address": ${ residences.item(4).address }
+      - "residence5_dates": ${ residences.item(4).dates }
+      - "residence6_person_name": ${ residences.item(5).person_name }
+      - "residence6_address": ${ residences.item(5).address }
+      - "residence6_dates": ${ residences.item(5).dates }
+      - "guardianship_reason": ${ guardianship_reason }
+      - "property1_name": ${ properties.item(0).name }
+      - "property1_location": ${ properties.item(0).location }
+      - "property1_value": ${ currency(properties[0].market_value) if properties.number() > 0 else "" }
+      - "property1_owner": ${ properties.item(0).owner }
+      - "property2_name": ${ properties.item(1).name }
+      - "property2_location": ${ properties.item(1).location }
+      - "property2_value": ${ currency(properties[1].market_value) if properties.number() > 1 else "" }
+      - "property2_owner": ${ properties.item(1).owner }
+      - "property3_name": ${ properties.item(2).name }
+      - "property3_location": ${ properties.item(2).location }
+      - "property3_value": ${ currency(properties[2].market_value) if properties.number() > 2 else "" }
+      - "property3_owner": ${ properties.item(2).owner }
+      - "property4_name": ${ properties.item(3).name }
+      - "property4_location": ${ properties.item(3).location }
+      - "property4_value": ${ currency(properties[3].market_value) if properties.number() > 3 else "" }
+      - "property4_owner": ${ properties.item(3).owner }
+      - "users1_interest_in_property": ${ users1_interest_in_property }
+      - "proceedings_minor1": ${ proceedings_minor1 }
+      - "proceedings_petitioner1": ${ proceedings_petitioner1 }
+      - "attorney_signed_date": ${ attorney_signed_date.format() }
+      - "attorney_signature": ${ attorneys[0].signature }
+      - "attorney_number": ${ attorney_number }
+      - "attorney_phone_number": ${ attorneys[0].phone_number }
+      - "attorney_name": ${ attorneys[0] }
+      - "attorney_fax": ${ attorney_fax }
+      - "attorney_address_address": ${ attorneys[0].address.address }
+      - "attorney_email": ${ attorneys[0].email }
+      - "attorney_address_city_zip": ${ attorney_address_city_zip }
+      - "users1_address_city_zip": ${ users1_address_city_zip }
+      - "users1_fax": ${ users1_fax }
+      - "users1_signed_date": ${ users1_signed_date.format() }
+      - "users1_signature": ${ users[0].signature }
+---
+code: |
+  labeled_labeled_ccgn001withfieldswithfields_attachment.overflow_fields["residences"].overflow_trigger = 6
+  labeled_labeled_ccgn001withfieldswithfields_attachment.overflow_fields["residences"].label = "Residences (continued)"
+  labeled_labeled_ccgn001withfieldswithfields_attachment.overflow_fields["residences"].headers = [{'person_name': 'Person name'}, {'address': 'Address'}, {'dates': 'Dates'}]
+  labeled_labeled_ccgn001withfieldswithfields_attachment.overflow_fields["properties"].overflow_trigger = 4
+  labeled_labeled_ccgn001withfieldswithfields_attachment.overflow_fields["properties"].label = "Properties (continued)"
+  labeled_labeled_ccgn001withfieldswithfields_attachment.overflow_fields["properties"].headers = [{'name': 'Name'}, {'location': 'Location'}, {'market_value': 'Market value'}, {'owner': 'Owner'}]
+  labeled_labeled_ccgn001withfieldswithfields_attachment.overflow_fields.gathered = True
