@@ -13,7 +13,7 @@ metadata:
   description: |-
     This form is used to ask for guardianship of a minor in Maryland. It lets you request the right to make decisions for a minor child.
   can_I_use_this_form: |
-    You can use this form if you are seeking guardianship of a minor child. If the minor is not a child, a different form is needed. Make sure to fill out separate petitions for each minor unless they are siblings.
+    You can use this form if you are seeking guardianship of a minor child. If the minor is not a child, a different form is needed. Make sure to fill out separate petitions for each minor unless they are full siblings in the same situation. Half-siblings need separate petitions.
   before_you_start: |
     ### Before you start
     - Gather all needed information about the minor and your connection to them.
@@ -262,7 +262,7 @@ subquestion: |
   - Check your petition for accuracy and completeness.
   - Send the petition to the right court along with any required fees.
 
-  You can use this form if you are seeking guardianship of a minor child. If the minor is not a child, a different form is needed. Make sure to fill out separate petitions for each minor unless they are siblings.
+  You can use this form if you are seeking guardianship of a minor child. If the minor is not a child, a different form is needed. Make sure to fill out separate petitions for each minor unless they are full siblings in the same situation. Half-siblings need separate petitions.
 
   This petition asks the court to appoint a guardian of the **person** of a minor. It does not ask for guardianship of the minor’s property.
 ---
@@ -285,7 +285,6 @@ subquestion: |
 
   If you answered by mistake, you can go back and change your answer.
 buttons:
-  - Go back and change my answer: undo
   - Exit: exit
     url: https://www.mdlab.org
 ---
@@ -535,10 +534,32 @@ id: another child
 question: |
   Is there another child on this petition?
 subquestion: |
-  A single petition can cover siblings in the same situation. Otherwise, you need a separate petition for each child.
+  A single petition can cover full siblings in the same situation. Half-siblings, and children who are not in the same situation, need separate petitions.
+
+  % if len(children) >= 6:
+  This petition has room for six children, so you can't add more. If there are other children, start a separate petition for them.
+  % endif
 fields:
   - no label: children.there_is_another
     datatype: yesnoradio
+  - Is the next child a full sibling of the children already listed, in the same situation?: children_next_is_full_sibling
+    datatype: yesnoradio
+    show if:
+      variable: children.there_is_another
+      is: True
+validation code: |
+  if children.there_is_another and len(children) >= 6:
+    validation_error(
+        "This petition has room for six children. Choose No to finish this petition, "
+        "then start a separate petition for any other children.",
+        field="children.there_is_another",
+    )
+  if children.there_is_another and not children_next_is_full_sibling:
+    validation_error(
+        "Half-siblings, and children who are not in the same situation, need their own petition. "
+        "Choose No above to finish this petition, then start a new petition for the other child.",
+        field="children_next_is_full_sibling",
+    )
 ---
 code: |
   children_current_location = "; ".join(
@@ -1305,7 +1326,11 @@ question: |
 subquestion: |
   ${ children.table }
 
+  % if len(children) < 6:
   ${ children.add_action() }
+  % else:
+  This petition has room for six children. Start a separate petition for any others.
+  % endif
 ---
 table: children.table
 rows: children
@@ -1634,4 +1659,28 @@ code: |
   labeled_labeled_ccgn001withfieldswithfields_attachment.overflow_fields["residences"].overflow_trigger = 6
   labeled_labeled_ccgn001withfieldswithfields_attachment.overflow_fields["residences"].label = "Residences (continued)"
   labeled_labeled_ccgn001withfieldswithfields_attachment.overflow_fields["residences"].headers = [{'person_name': 'Who the child lived with'}, {'address': 'Address'}, {'dates': 'Dates'}]
+
+  # Lists the PDF has only a few slots for: anything past the slots goes on the addendum
+  # (children are capped at six on the interview screen, so they never overflow).
+  # Optional categories are only included when the user ticked them, so
+  # this code never triggers questions about people they said don't apply.
+  people_headers = [{'name': 'Name'}, {'address': 'Address'}, {'phone_number': 'Phone number'}, {'email': 'Email'}]
+  overflow_people_lists = [
+    ('parents', 'Parents (continued)', 2, True),
+    ('siblings', 'Siblings (continued)', 4, bool(siblings.there_are_any)),
+    ('guardians', 'Guardians (continued)', 1, other_interested['guardians']),
+    ('power_of_attorney', 'Powers of attorney (continued)', 1, other_interested['power_of_attorney']),
+    ('minor_attorney', "Children's attorneys (continued)", 1, other_interested['minor_attorney']),
+    ('responsible_person', 'Persons responsible (continued)', 1, other_interested['responsible_person']),
+    ('government_agency', 'Government agencies (continued)', 1, other_interested['government_agency']),
+    ('interested_person', 'Interested persons (continued)', 1, other_interested['interested_person']),
+    ('control_person', 'Persons in control (continued)', 1, other_interested['control_person']),
+    ('eligible_guardian', 'Eligible guardians (continued)', 1, other_interested['eligible_guardian']),
+    ('heirs', 'Heirs at law (continued)', 1, other_interested['heirs']),
+  ]
+  for list_name, list_label, list_trigger, list_in_use in overflow_people_lists:
+    if list_in_use:
+      labeled_labeled_ccgn001withfieldswithfields_attachment.overflow_fields[list_name].overflow_trigger = list_trigger
+      labeled_labeled_ccgn001withfieldswithfields_attachment.overflow_fields[list_name].label = list_label
+      labeled_labeled_ccgn001withfieldswithfields_attachment.overflow_fields[list_name].headers = people_headers
   labeled_labeled_ccgn001withfieldswithfields_attachment.overflow_fields.gathered = True
